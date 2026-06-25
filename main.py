@@ -1,13 +1,38 @@
-from telegram import Update
-from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
+import os
+import logging
+from telegram.ext import ApplicationBuilder, CommandHandler
 
-TOKEN = "YOUR_BOT_TOKEN_HERE"
+logging.basicConfig(
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    level=logging.INFO
+)
 
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("⚡ Welcome to WA.io Support Bot")
+TOKEN = os.environ.get('TOKEN') or os.environ.get('BOT_TOKEN')
+
+if not TOKEN:
+    raise ValueError("❌ توکن بات در Environment Variables تنظیم نشده!")
 
 app = ApplicationBuilder().token(TOKEN).build()
 
-app.add_handler(CommandHandler("start", start))
+async def start(update, context):
+    await update.message.reply_text(
+        "⚡ **WA.io Token**\n\n"
+        "🪙 ۱۰ میلیارد توکن | BNB Smart Chain\n"
+        "📈 رشد سریع | ماینینگ ۲۴/۷\n"
+        "🌍 ارجاع و پاداش\n\n"
+        "🔗 وبسایت: https://wa.io\n"
+        "💬 پشتیبانی: @WAioSupport"
+    )
 
-app.run_polling()
+async def help_command(update, context):
+    await update.message.reply_text(
+        "برای شروع ماینینگ به سایت https://wa.io مراجعه کنید.\n"
+        "سوالات خود را به @WAioSupport بفرستید."
+    )
+
+app.add_handler(CommandHandler("start", start))
+app.add_handler(CommandHandler("help", help_command))
+
+if __name__ == "__main__":
+    print("🚀 WA.io Bot started successfully...")
+    app.run_polling(drop_pending_updates=True)
