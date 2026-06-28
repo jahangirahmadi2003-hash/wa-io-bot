@@ -1,0 +1,18 @@
+import "reflect-metadata";
+import TelegramBot from "node-telegram-bot-api";
+
+const TOKEN = process.env.BOT_TOKEN || "";
+
+const bot = new TelegramBot(TOKEN, { polling: true });
+
+bot.onText(/\/start/, (msg) => {
+  bot.sendMessage(msg.chat.id, "⚡ WA.io Bot is running!");
+});
+
+// نمونه کنترل ساده کانال
+bot.onText(/\/post (.+)/, (msg, match) => {
+  const text = match?.[1];
+  if (!text) return;
+
+  bot.sendMessage(msg.chat.id, `📢 Posted: ${text}`);
+});
